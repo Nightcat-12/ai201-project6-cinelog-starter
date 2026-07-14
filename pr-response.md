@@ -117,9 +117,11 @@ Added `remove_from_watchlist(user_id, film_id)` mirroring `remove_from_collectio
 
 Final history after rewrite (verify live with `git log --oneline origin/main..HEAD`):
 
+<img src="stretch_feature.png" alt="Description" width="400">
+
 ```
 docs: add pr-response.md with review replies and design decisions
-test: add watchlist service tests for errors and edge cases
+test: add watchlist service tests for errors and edge casesgi
 feat: add remove_from_watchlist and public visibility parameter
 fix: use db.session.get for film lookup in collection service
 fix: add deduplication check for watchlist entries
