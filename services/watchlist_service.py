@@ -2,6 +2,7 @@
 services/watchlist_service.py — CineLog (feature/watchlist branch)
 
 Business logic for the watchlist feature.
+All functions follow the project's verb_to_noun naming convention.
 """
 
 from app import db
@@ -9,9 +10,9 @@ from models import Film, WatchlistEntry
 from services.collection_service import FilmNotFoundError
 
 
-def save_to_watchlist(user_id, film_id):
+def add_to_watchlist(user_id, film_id):
     """
-    Save a film to a user's watchlist.
+    Add a film to a user's watchlist.
 
     Args:
         user_id (str): UUID of the user.
