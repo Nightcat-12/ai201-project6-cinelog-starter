@@ -10,6 +10,11 @@ from models import Film, WatchlistEntry
 from services.collection_service import FilmNotFoundError
 
 
+class AlreadyOnWatchlistError(Exception):
+    """Raised when a film is already on the user's watchlist."""
+    pass
+
+
 def add_to_watchlist(user_id, film_id):
     """
     Add a film to a user's watchlist.
@@ -23,10 +28,19 @@ def add_to_watchlist(user_id, film_id):
 
     Raises:
         FilmNotFoundError: If film_id does not exist.
+        AlreadyOnWatchlistError: If the film is already on the user's watchlist.
     """
     film = db.session.get(Film, film_id)
     if film is None:
         raise FilmNotFoundError(f"No film found with id '{film_id}'")
+
+    existing = WatchlistEntry.query.filter_by(
+        user_id=user_id, film_id=film_id
+    ).first()
+    if existing:
+        raise AlreadyOnWatchlistError(
+            f"Film '{film_id}' is already on this user's watchlist"
+        )
 
     entry = WatchlistEntry(user_id=user_id, film_id=film_id)
     db.session.add(entry)
@@ -37,6 +51,10 @@ def add_to_watchlist(user_id, film_id):
 def get_watchlist(user_id):
     """
     Return all films on a user's watchlist, sorted alphabetically by title.
+
+    Alphabetical order is intentional: watchlists are a planning list users
+    scan when deciding what to watch, not a chronological activity log.
+    See pr-response.md Comment 5 for the design rationale.
 
     Args:
         user_id (str): UUID of the user.
